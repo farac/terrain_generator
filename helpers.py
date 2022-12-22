@@ -8,11 +8,19 @@ import matplotlib.pyplot as plt
 import matplotlib.image as img
 from PIL import Image, ImageColor
 
-class Elevation(Enum):
-    Sea, Lowlands, Plains, Hills, Mountains = range(5)
+class Colors:
+    Sea = (0,115,184)
 
-class Moisture(Enum):
-    Very_dry, Dry, Temperate, Wet, Very_wet = range(5)
+    Salt_desert = (242,251,199)
+    Grasslands = (154,205,50)
+    Jungle = (107,141,8)
+    Rainforest = (107,122,52)
+
+    Desert = (244,191,30)
+    Forest = (94,184,21)
+
+    Grayrock = (188,188,188)
+    Snow = (243,241,234)
 
 class Helper:
 
@@ -54,8 +62,54 @@ class Noise_Generator:
 
 class Map:
     def __init__(self, sealevel, moisture_midpoint):
-        self.sealevel = sealevel
-        self.moisture_midpoint = moisture_midpoint
+        #all ranges are -1 to 1
+        #all variables represent the end of range for height/moisture value
+        #Sea, Lowlands, Plains, Hills, Mountains
+        #Very_dry, Dry, Temperate, Wet, Very_wet
+        #Very dry is lowest and not used
+        self.Mountains = 1
+        self.Sea = sealevel
+        __, self.Lowlands, self.Plains, self.Hills, __ = np.linspace(self.Sea, self.Mountains, 5)
 
-    def create_from_noisemaps(self, height, moisture):
-        
+        self.Very_dry = -1
+        self.Very_wet = 1
+        self.Temperate = moisture_midpoint
+        __, self.Dry, __ = np.linspace(self.Very_dry, self.Temperate, 3)
+        __, self.Wet, __ = np.linspace(self.Temperate, self.Very_wet, 3)
+
+    def populate_map(self, height, moisture):
+        #height = x[0]
+        #moisture = x[1]
+        map_array = np.zeros(height.shape())
+        for h,m in np.nditer([height, moisture]):
+            if h <= self.Sea:
+                return Colors.Sea
+            elif h <= self.Lowlands:
+                if m <= self.Dry: return Colors.Salt_desert
+                if m <= self.Temperate: return Colors.Grasslands
+                if m <= self.Wet: return Colors.Jungle
+                if m <= self.Very_wet: return Colors.Rainforest
+            elif h <= self.Plains:
+                if m <= self.Dry: return Colors.Desert
+                if m <= self.Temperate: return Colors.Forest
+                if m <= self.Wet: return Colors.Jungle
+                if m <= self.Very_wet: return Colors.Rainforest
+            elif h <= self.Hills:
+                if m <= self.Dry: return Colors.Grayrock
+                if m <= self.Temperate: return Colors.Forest
+                if m <= self.Wet: return Colors.Jungle
+                if m <= self.Very_wet: return Colors.Rainforest
+            elif h <= self.Mountains:
+                if m <= self.Dry: return Colors.Grayrock
+                if m <= self.Wet: return Colors.Snow
+        return map_array
+
+    # def create_from_noisemaps(self, heightmap, moisturemap):
+    #     #ne ovako ovo je iteracija oba arraya istovremeno, i spremanje u treci
+    #     #nova matrica u koju spremas rezultat bla bla
+    #     for height_val in np.nditer(heightmap):
+    #         for moisture_val in np.nditer(moisturemap):
+    #             if(height_val < self.Sea):
+
+
+

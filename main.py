@@ -1,7 +1,7 @@
 import PySimpleGUI as sg
 from PIL import Image
 
-from helpers import Noise_Generator, Helper
+from helpers import Noise_Generator, Helper, Map
 
 sg.theme("DarkAmber")
 
@@ -97,14 +97,16 @@ while True:
         moistmap = generator.generate_noise_array(values['-M_AMPL1-'], values['-M_AMPL2-'], values['-M_AMPL3-'],
                                                  values['-M_AMPL4-'], values['-M_AMPL5-'],
                                                  moist_a1_scale, moist_a2_scale, moist_a3_scale, moist_a4_scale, moist_a5_scale)
-        is_noise_generated = True
         map_image.update("map.png")
         print("Generated noise.")
 
     if event == 'Create map':
-        if not heightmap.any() and not moistmap.any():
+        if not heightmap.any() or not moistmap.any():
             Helper.print_error(window, "Generate noisemaps using other button first!")
             continue
+
+        map_o = Map(values['-SEALEVEL-'], values['-MOISMID-'])
+        geomap = map_o.populate_map(heightmap, moistmap)
 
 
 
