@@ -27,9 +27,9 @@ or
 ./map_generator.pyw
 ```
 
-## acknowledgements
+## Acknowledgements
 
-Thanks to the authors of the python OpenSimplex implementation available here:
+Created using python OpenSimplex implementation available here:
 
 https://github.com/lmas/opensimplex
 
