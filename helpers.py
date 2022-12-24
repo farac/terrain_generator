@@ -1,13 +1,7 @@
-from locale import normalize
-import PySimpleGUI as sg
-from enum import Enum
-import perlin_noise as p_n
 import opensimplex as simplex
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.image as img
 import matplotlib.colors as col
-from PIL import Image, ImageColor
 
 class Colors:
     Sea = "#0073B8"
@@ -23,13 +17,20 @@ class Colors:
     Grayrock = "#BCBCBC"
     Snow = "#F3F1EA"
 
-    map_colors = col.ListedColormap((Sea, Salt_desert, Desert, Grasslands, Forest, Jungle, Rainforest, Grayrock, Snow))
+    map_colors = col.ListedColormap((Sea, Salt_desert, Desert, Grasslands, Forest, Jungle, Rainforest, Grayrock, Snow),)
     Sea_v, Salt_desert_v, Desert_v, Grasslands_v, Forest_v, Jungle_v, Rainforest_v, Grayrock_v, Snow_v = np.linspace(0, 1, 9)
 
 class Helper:
 
     def print_error(window, error_string):
         window["-ERROR-"].update(error_string)
+
+    def print_info(window, error_string):
+        window["-INFO-"].update(error_string)
+
+    def clear_output_text(window):
+        window["-ERROR-"].update("")
+        window["-INFO-"].update("")
 
     def check_strings_not_empty(strings):
         for string in strings:
@@ -38,7 +39,8 @@ class Helper:
         return True
 
     def scale(data):
-        #a=-1, b=1
+        #x_new = (b - a) * ((x - min(x)) / (max(x) - min(x))) + a
+        #where a = -1, b = 1, x = data
         return (-1 - 1) * ((data - np.min(data)) / (np.max(data) - np.min(data))) + 1
 
     def fetch_random_int():
@@ -56,16 +58,10 @@ class Noise_Generator:
         self.height = height
         self.seed = seed
         self.rng = np.random.default_rng(seed)
-        ##onapravi da se poziva novi unutar generacije 
-        #mozes generirat seedove za njega i tjt, deterministicki je
     
     def generate_noise_array(self,
                              a1_weight, a2_weight, a3_weight, a4_weight, a5_weight,
                              a1_scale, a2_scale, a3_scale, a4_scale, a5_scale, is_moisture = False):
-        # if not is_moisture:
-        #     simplex.seed(self.seed)
-        # else:
-        #     simplex.seed(self.seed + 1)
         simplex.seed(self.rng.integers(np.iinfo(np.int32).max))
         ix, iy = np.arange(self.width), np.arange(self.height)
 
@@ -87,9 +83,10 @@ class Map:
     def __init__(self, sealevel, moisture_midpoint):
         #all ranges are -1 to 1
         #all variables represent the end of range for height/moisture value
+        
         #Sea, Lowlands, Plains, Hills, Mountains
         #Very_dry, Dry, Temperate, Wet, Very_wet
-        #Very dry is lowest and not used
+        #Very dry is lower bound, not used by that name
         self.Mountains = 1
         self.Sea = sealevel
         __, self.Lowlands, self.Plains, self.Hills, __ = np.linspace(self.Sea, self.Mountains, 5)

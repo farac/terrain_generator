@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 from helpers import Noise_Generator, Helper, Map, Colors
 
 sg.theme("DarkAmber")
+map_image = sg.Image("default_map.png")
+height_image = sg.Image("default_heightmap.png")
+moisture_image = sg.Image("default_moisturemap.png")
 
 map_parameters_column=[[sg.Text("Height: "), sg.Input(key="-HEIGHT-", size=6, default_text="300"), sg.Text("px")],
           [sg.Text("Width: "), sg.Input(key="-WIDTH-", size=6, default_text="400"), sg.Text("px")], 
@@ -40,14 +43,11 @@ save_controls =[[sg.Text("Output filename:"), sg.Input(key="-F_PATH-", size=14, 
                 [sg.Text("Output image scale factor:"), sg.Input(key="-F_SIZE-", size=3, default_text="2"), sg.Text("times")],
                 [sg.Button("Save map to file")]]
 
-map_image = sg.Image("test.png")
-height_image = sg.Image("test.png")
-moisture_image = sg.Image("test.png")
 layout = [[height_image, moisture_image, map_image],      
           [sg.Column(map_parameters_column), sg.VSeperator(), sg.Column(height_moist_sliders_column)],
           [sg.Column(heightmap_column), sg.VSeperator(), sg.Column(tempmap_column), sg.VSeperator(), sg.Column(save_controls)],
           [sg.Button("Generate height and moisture noisemaps"), sg.Button("Create map"), sg.Button("Exit")],
-          [sg.Text(key="-ERROR-", text_color="red")]]      
+          [sg.Text(key="-ERROR-", text_color="red"), sg.Text(key="-INFO-", text_color="white")]]      
 
 window = sg.Window('Map generator', layout)    
 window.move_to_center
@@ -56,7 +56,7 @@ heightmap, moistmap = None, None
 
 while True:
     event, values = window.read()
-    window['-ERROR-'].update("")
+    Helper.clear_output_text(window)
     print(event, values)
 
     if event == sg.WIN_CLOSED or event == 'Exit':
@@ -96,7 +96,7 @@ while True:
             Helper.print_error(window, "At least one moisture map amplitude weight must not be 0!")
             continue
 
-        window['-ERROR-'].update("")
+        Helper.clear_output_text(window)
         generator = Noise_Generator(width, height, seed)
         heightmap = generator.generate_noise_array(values['-AMPL1-'], values['-AMPL2-'], values['-AMPL3-'],
                                                    values['-AMPL4-'], values['-AMPL5-'],
@@ -106,7 +106,7 @@ while True:
                                                  moist_a1_scale, moist_a2_scale, moist_a3_scale, moist_a4_scale, moist_a5_scale, True)
         height_image.update("height.png")
         moisture_image.update("moisture.png")
-        print("Generated noise.")
+        Helper.print_info(window, "Generated noisemaps.")
 
     if event == 'Create map':
         try: 
@@ -116,11 +116,12 @@ while True:
             Helper.print_error(window, "Generate noisemaps using other button first!")
             continue
         
-        window['-ERROR-'].update("")
+        Helper.clear_output_text(window)
         map_o = Map(values['-SEALEVEL-'], values['-MOISMID-'])
         geomap = map_o.populate_map(heightmap, moistmap)
         plt.imsave("map.png", geomap, cmap=Colors.map_colors)
         map_image.update("map.png")
+        Helper.print_info(window, "Generated map.")
 
     if event == 'Save map to file':
         try: 
@@ -134,11 +135,12 @@ while True:
             Helper.print_error(window, "Casting values to int failed, check input!")
             continue
         
-        window['-ERROR-'].update("")
+        Helper.clear_output_text(window)
         with Image.open('map.png') as img:
             (new_width, new_height) = ((img.width * factor, img.height * factor))
-            img_resized = img.resize((new_width, new_height), Image.Resampling.BILINEAR)
+            img_resized = img.resize((new_width, new_height), Image.Resampling.LANCZOS)
             img_resized.save(values["-F_PATH-"])
+        Helper.print_info(window, "Saved image to disk.")
 
 
 window.close()
