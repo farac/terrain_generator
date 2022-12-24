@@ -16,27 +16,27 @@ height_moist_sliders_column=[[sg.Text("Sealevel:               "), sg.Slider(key
           [sg.Text("Moisture midpoint: "), sg.Slider(key="-MOISMID-" ,range=(-1,1), resolution=0.01, orientation='h', default_value=0)]]
 
 heightmap_column = [[sg.Text("Heightmap:")],
-          [sg.Text("A1 scale: "), sg.Input(key="-SCALE1-", size=3, default_text="65"),
+          [sg.Text("A1 scale: "), sg.Input(key="-SCALE1-", size=3, default_text="60"),
            sg.Text("A1 weight: "), sg.Slider(key="-AMPL1-" ,range=(0,2), resolution=0.01, orientation='h', default_value=2)],
-          [sg.Text("A2 scale: "), sg.Input(key="-SCALE2-", size=3, default_text="55"),
+          [sg.Text("A2 scale: "), sg.Input(key="-SCALE2-", size=3, default_text="50"),
            sg.Text("A2 weight: "), sg.Slider(key="-AMPL2-" ,range=(0,2), resolution=0.01, orientation='h', default_value=1.6)],
-          [sg.Text("A3 scale: "), sg.Input(key="-SCALE3-", size=3, default_text="45"),
+          [sg.Text("A3 scale: "), sg.Input(key="-SCALE3-", size=3, default_text="40"),
            sg.Text("A3 weight: "), sg.Slider(key="-AMPL3-" ,range=(0,2), resolution=0.01, orientation='h', default_value=1.2)],
-          [sg.Text("A4 scale: "), sg.Input(key="-SCALE4-", size=3, default_text="25"),
+          [sg.Text("A4 scale: "), sg.Input(key="-SCALE4-", size=3, default_text="20"),
            sg.Text("A4 weight: "), sg.Slider(key="-AMPL4-" ,range=(0,2), resolution=0.01, orientation='h', default_value=0.8)],
-          [sg.Text("A5 scale: "), sg.Input(key="-SCALE5-", size=3, default_text="15"),
+          [sg.Text("A5 scale: "), sg.Input(key="-SCALE5-", size=3, default_text="10"),
            sg.Text("A5 weight: "), sg.Slider(key="-AMPL5-" ,range=(0,2), resolution=0.01, orientation='h', default_value=0.4)]]
 
 tempmap_column = [[sg.Text("Moisture map:")],
-          [sg.Text("A1 scale: "), sg.Input(key="-M_SCALE1-", size=3, default_text="60"),
+          [sg.Text("A1 scale: "), sg.Input(key="-M_SCALE1-", size=3, default_text="65"),
            sg.Text("A1 weight: "), sg.Slider(key="-M_AMPL1-" ,range=(0,2), resolution=0.01, orientation='h', default_value=2)],
-          [sg.Text("A2 scale: "), sg.Input(key="-M_SCALE2-", size=3, default_text="50"),
+          [sg.Text("A2 scale: "), sg.Input(key="-M_SCALE2-", size=3, default_text="55"),
            sg.Text("A2 weight: "), sg.Slider(key="-M_AMPL2-" ,range=(0,2), resolution=0.01, orientation='h', default_value=1.6)],
-          [sg.Text("A3 scale: "), sg.Input(key="-M_SCALE3-", size=3, default_text="40"),
+          [sg.Text("A3 scale: "), sg.Input(key="-M_SCALE3-", size=3, default_text="45"),
            sg.Text("A3 weight: "), sg.Slider(key="-M_AMPL3-" ,range=(0,2), resolution=0.01, orientation='h', default_value=1.2)],
-          [sg.Text("A4 scale: "), sg.Input(key="-M_SCALE4-", size=3, default_text="20"),
+          [sg.Text("A4 scale: "), sg.Input(key="-M_SCALE4-", size=3, default_text="25"),
            sg.Text("A4 weight: "), sg.Slider(key="-M_AMPL4-" ,range=(0,2), resolution=0.01, orientation='h', default_value=0.8)],
-          [sg.Text("A5 scale: "), sg.Input(key="-M_SCALE5-", size=3, default_text="10"),
+          [sg.Text("A5 scale: "), sg.Input(key="-M_SCALE5-", size=3, default_text="15"),
            sg.Text("A5 weight: "), sg.Slider(key="-M_AMPL5-" ,range=(0,2), resolution=0.01, orientation='h', default_value=0.4)]]
 
 save_controls =[[sg.Text("Output filename:"), sg.Input(key="-F_PATH-", size=14, default_text="output.png")],
