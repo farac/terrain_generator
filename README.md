@@ -5,7 +5,7 @@ Python terrain generator using heightmaps and moisturemaps generated using OpenS
 
 ## Install:
 
-This program needs python3 and installed and setup to run.
+This program needs python3 installed and setup to run.
 
 Additional modules needed:
 
